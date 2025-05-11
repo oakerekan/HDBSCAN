@@ -1,0 +1,17 @@
+# Create a requirements.txt file
+requirements = """pandas
+numpy
+matplotlib
+seaborn
+scipy
+scikit-learn
+tensorflow
+tslearn[hdf5]
+hdbscan
+umap-learn
+ruptures
+lifelines
+shap
+jupyter
+notebook
+"""
