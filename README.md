@@ -1,87 +1,51 @@
-# Bottleneck Analysis & Forecasting
+# 📊 DTW-Based Clustering Pipeline for Production Bottlenecks
 
-This repository provides a comprehensive Jupyter notebook pipeline for identifying and forecasting production bottlenecks in a Maggi production plant. It is organized into two stages:
-
-- **Stage 1**: Unsupervised clustering of bottleneck events using Agglomerative Hierarchical Clustering (AHC) and density-based methods, with extensive validation and visualization.  
-- **Stage 2**: Supervised forecasting of future bottleneck durations using Recurrent Neural Networks (LSTM & GRU).
+This project implements a robust time-series clustering pipeline for analyzing **bottleneck durations** in a manufacturing or production line environment. Leveraging **Dynamic Time Warping (DTW)**, the pipeline captures temporal similarities between operational patterns — enabling insightful grouping of production behaviors for diagnostics, optimization, or alert systems.
 
 ---
 
-## Table of Contents
+## 🔍 Problem Statement
 
-1. [Project Overview](#project-overview)  
-2. [Notebook Structure](#notebook-structure)  
-3. [Requirements](#requirements)  
-4. [Setup Instructions](#setup-instructions)  
-5. [Usage](#usage)  
-6. [Output Files](#output-files)  
-7. [Next Steps](#next-steps)
+In many production environments, bottlenecks (periods of delay or stoppage) are common but vary in pattern and duration. Traditional clustering (e.g., using average durations) ignores the **sequential and time-varying nature** of these events.
 
----
+This project tackles the problem by:
 
-## Project Overview
-
-This analysis tackles two key challenges:
-
-1. **Bottleneck Identification**  
-   Extract meaningful patterns in machine stoppage data to group similar behaviors (e.g., long active periods, frequent idle cycles) that represent production constraints.
-
-2. **Bottleneck Forecasting**  
-   Build predictive models to forecast the next bottleneck duration, enabling proactive maintenance and scheduling.
-
-Data is sourced from stoppage logs with fields such as:
-`Line`, `Stoppage Category`, `Stoppage Reason`, `Start Datetime`, `End Datetime`, and `Bottleneck Duration Seconds`.
+- Treating bottleneck durations as **time series**
+- Measuring similarity using **DTW**, which handles sequences of varying length and speed
+- Applying clustering to discover **common patterns or anomalies** in stoppage behavior
 
 ---
 
-## Notebook Structure
+## 🧠 Key Features
 
-The main notebook (`Stage1_Clustering_Pipeline.ipynb`) is organized as follows:
-
-1. **Imports**  
-   Load Python libraries (pandas, numpy, scikit-learn, seaborn, tslearn, tf-keras).
-
-2. **Data Loading & Cleaning**  
-   Read the Excel file, validate columns, drop missing values, classify active vs. non-active events.
-
-3. **Advanced Preprocessing**  
-   IQR-based outlier removal and optional smoothing of duration signals.
-
-4. **Summary Statistics & Time-Series Extraction**  
-   Create `stats` DataFrame (mean, std, min, max, count) and raw time-series dict for DTW.
-
-5. **Distance Matrices**  
-   Compute Euclidean distances on `stats` and optional DTW distances on raw series.  
-   - **Heatmap** of distance matrix  
-   - **Elbow plot** (KMeans WCSS)
-
-6. **Parameter Tuning for AHC**  
-   Use silhouette analysis to pick the optimal number of clusters.
-
-7. **Clustering Execution**  
-   Perform AHC and density-based clustering (HDBSCAN/DBSCAN fallback).
-
-8. **Evaluation Metrics**  
-   Compute silhouette, Davies–Bouldin, and Calinski–Harabasz indices for both methods.
-
-9. **Visualizations**  
-   Dendrogram, silhouette curve, and time-series overlays for cluster inspection.
-
-10. **Export Results**  
-    Save clustering metrics and assignments to CSV files.
-
-11. **Additional Analyses**  
-    Suggestions and code stubs for advanced PhD-level extensions (t-SNE, UMAP, bootstrap stability, survival analysis, etc.).
-
-12. **Stage 2: Predictive Modeling**  
-    Data preparation, LSTM & GRU model training, evaluation, and comparison.
+✅ Time-series segmentation per `(Line, Stoppage Reason, Shift Id)`  
+✅ Outlier filtering using IQR  
+✅ Dynamic Time Warping (DTW) distance computation  
+✅ Hierarchical and density-based clustering (AHC, DBSCAN/HDBSCAN)  
+✅ Cluster evaluation using silhouette score  
+✅ Visual summaries: dendrograms, silhouette plots, cluster samples  
+✅ Exportable cluster assignments and metrics  
 
 ---
 
-## Requirements
+## 📁 Project Structure
 
-- **Python 3.8+**  
-- **Jupyter Notebook** or **JupyterLab**  
-- Required packages (install via `pip`):  
-  ```bash
-  pip install pandas numpy matplotlib seaborn scipy scikit-learn tensorflow tslearn[hdf5] hdbscan umap-learn ruptures lifelines shap
+| File                             | Description                                              |
+|----------------------------------|----------------------------------------------------------|
+| `Stage1_Clustering_Pipeline copy.ipynb` | Main notebook with full preprocessing-to-export pipeline |
+| `clustering_metrics_stage1.csv` | Summary of clustering evaluation metrics                 |
+| `cluster_assignments_stage1.csv` | Cluster labels per time series group                     |
+| `README.md`                     | Project documentation (this file)                        |
+| `requirements.txt`             | Python package dependencies                              |
+
+---
+
+## 🧰 Technologies Used
+
+- Python 3.8+ or 3.10 (Python 3.13 support still evolving for some packages)
+- [tslearn](https://tslearn.readthedocs.io/en/stable/) – Time-series learning
+- [scikit-learn](https://scikit-learn.org/) – Clustering algorithms and metrics
+- [matplotlib](https://matplotlib.org/) / [seaborn](https://seaborn.pydata.org/) – Plotting
+- [HDBSCAN](https://hdbscan.readthedocs.io/en/latest/) – Density-based clustering (optional)
+
+---
